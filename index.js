@@ -28,8 +28,11 @@ client.connect((err) => {
 
   const reviewCollection = client.db("creativeAgency").collection("review");
 
-  const customerServiceCollection = client.db("creativeAgency").collection("customerService");
+  const addServiceCollection = client.db("creativeAgency").collection("customerService");
 
+  const adminCollection = client.db("creativeAgency").collection("admin");
+
+  const statusCollection = client.db("creativeAgency").collection("status");
 
   
   //order components a click kore with out pic a rakha hoise
@@ -118,32 +121,55 @@ client.connect((err) => {
   //customerService adding addService components
   app.post("/addACustomerService", (req, res) => {
     const file = req.files.file;
-    const addTitles = req.body.addTitle;
-    const addDescriptions = req.body.addDescription;
+    const title = req.body.addTitle;
+    const description = req.body.addDescription;
     const newImg = file.data;
     const encImg = newImg.toString("base64");
   
-  console.log(addTitles, addDescriptions);
-
     var addImage = {
       contentType: file.mimetype,
       size: file.size,
       img: Buffer.from(encImg, "base64"),
     };
 
-    customerServiceCollection.insertOne({ addTitles,addDescriptions,addImage}).then((result) => {
+    addServiceCollection.insertOne({ title,description,addImage}).then((result) => {
       res.send(result.insertedCount > 0);
     });
   });
 
   //new service add read korte newService Component a
   app.get("/newService", (req, res) => {
-    customerServiceCollection.find({}).toArray((err, documents) => {
+    addServiceCollection.find({}).toArray((err, documents) => {
       res.send(documents);
     });
   });
 
+  
+  app.post("/admin", (req, res) => {
+    const adminData = req.body;
+    adminCollection.insertOne(adminData)
+    .then((result) => {
+      res.send(result.insertedCount);
+    });
+  });
 
+  //chck admin to show sidebar data
+  // app.post("/isAdminData", (req, res) => {
+  //   const email = req.body.email;
+  //   adminCollection.find({email: email})
+  //    .toArray((err, admin))
+  //    res.send(admin.length > 0)
+  //   });
+
+  //for showing status 
+  app.post("/statusData", (req, res) => {
+    const statusInfo = req.body;
+    statusCollection.insertOne(statusInfo).then((result) => {
+      res.send(result.insertedCount);
+    });
+  });
+
+  
 
 
 
