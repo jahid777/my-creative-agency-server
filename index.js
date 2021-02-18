@@ -14,7 +14,8 @@ app.use(cors());
 app.use(express.static("customers"));
 app.use(fileUpload());
 
-const port = 5000;
+// const port = 5000;
+const port = process.env.PORT || 5000;
 
 app.get("/", (req, res) => {
   res.send("it is working");
@@ -195,4 +196,5 @@ client.connect((err) => {
 
 });
 
-app.listen(process.env.PORT || port);
+// app.listen(process.env.PORT || port);
+app.listen( port,()=>console.log(`connected database server${port}`));
