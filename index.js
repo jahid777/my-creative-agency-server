@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const cors = require("cors");
+const cors = require('cors');
+// const fx = require("fx-extra");
 const MongoClient = require("mongodb").MongoClient;
 require("dotenv").config();
 const fileUpload = require("express-fileupload");
@@ -144,6 +145,7 @@ client.connect((err) => {
     });
   });
 
+
   
   app.post("/admin", (req, res) => {
     const adminData = req.body;
@@ -154,12 +156,31 @@ client.connect((err) => {
   });
 
   //chck admin to show sidebar data
+  app.get("/isAdminData", (req, res) => {
+    const email = req.query.email;
+    // console.log(email.email);
+    adminCollection.find({email: email})
+     .toArray((err, admin)=>{
+      //  console.log(admin)
+      if(admin.length === 0){
+        res.send({admin: false})
+      }
+      else{
+        res.send({admin: true})
+      }
+     })
+    });
+
+
+
+  //   //chck admin to show sidebar data
   // app.post("/isAdminData", (req, res) => {
   //   const email = req.body.email;
   //   adminCollection.find({email: email})
   //    .toArray((err, admin))
   //    res.send(admin.length > 0)
   //   });
+
 
   //for showing status 
   app.post("/statusData", (req, res) => {
@@ -168,7 +189,14 @@ client.connect((err) => {
       res.send(result.insertedCount);
     });
   });
+ 
 
+  //for showing status data to oderList 
+  app.get("/getStatus", (req, res) => {
+    statusCollection.find({}).toArray((err, documents) => {
+      res.send(documents);
+    });
+  });
   
 
 
