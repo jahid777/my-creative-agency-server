@@ -173,16 +173,7 @@ client.connect((err) => {
 
 
 
-  //   //chck admin to show sidebar data
-  // app.post("/isAdminData", (req, res) => {
-  //   const email = req.body.email;
-  //   adminCollection.find({email: email})
-  //    .toArray((err, admin))
-  //    res.send(admin.length > 0)
-  //   });
-
-
-  //for showing status 
+  //creating status 
   app.post("/statusData", (req, res) => {
     const statusInfo = req.body;
     statusCollection.insertOne(statusInfo).then((result) => {
@@ -191,7 +182,7 @@ client.connect((err) => {
   });
  
 
-  //for showing status data to oderList 
+  //geting status data to oderList 
   app.get("/getStatus", (req, res) => {
     statusCollection.find({}).toArray((err, documents) => {
       res.send(documents);
